@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monad Portfolio Tracker</title>
+    
+    <!-- CDN Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CDN React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- CDN Babel pour JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- CDN Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- CDN Recharts -->
+    <script src="https://unpkg.com/recharts@2.8.0/umd/Recharts.js"></script>
+    
+    <!-- Configuration Tailwind personnalisée -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+        const { 
+            Search, Wallet, RefreshCw, AlertCircle, TrendingUp, 
+            Coins, Image, Activity, ChevronRight, Star, Globe 
+        } = lucide;
+        
+        const {
+            ResponsiveContainer,
+            BarChart,
+            Bar,
+            XAxis,
+            YAxis,
+            CartesianGrid,
+            Tooltip,
+            PieChart: RechartsPieChart,
+            Pie,
+            Cell,
+            AreaChart,
+            Area
+        } = Recharts;
+
+        // BlockVision Monad Indexing API (Testnet)
+        const BLOCKVISION_API = 'https://api.blockvision.org/v2/monad';
+        // Votre clé API BlockVision
+        const BV_API_KEY = '2xdIIScvIsQjhVPn28o5MxFFzAR';
+
+        const COLORS = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#EC4899'];
+
+        const MonadPortfolioTracker = () => {
+            const [address, setAddress] = useState('');
+            const [portfolio, setPortfolio] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const [error, setError] = useState('');
+
+            const isValidAddress = addr => /^0x[a-fA-F0-9]{40}$/.test(addr);
+
+            const formatCurrency = amt => {
+                const num = parseFloat(amt);
+                if (!isFinite(num)) return '$0.00';
+                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(num);
+            };
+
+            const formatNumber = num => {
+                if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
+                if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+                if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+                return num.toFixed(2);
+            };
+
+            const fetchBV = async (path) => {
+                const url = `${BLOCKVISION_API}${path}`;
+                const res = await fetch(url, { headers: { 'x-api-key': BV_API_KEY } });
+                if (res.status === 403) throw new Error('Accès refusé : clé API invalide ou permissions insuffisantes (403)');
+                if (res.status === 404) throw new Error('Ressource non trouvée (404). Vérifiez le chemin et les paramètres.');
+                if (res.status === 429) {
+                    // Rate limit - retry once after delay
+                    const retryAfter = parseInt(res.headers.get('Retry-After'), 10) || 1;
+                    await new Promise(r => setTimeout(r, retryAfter * 1000));
+                    const retryRes = await fetch(url, { headers: { 'x-api-key': BV_API_KEY } });
+                    if (!retryRes.ok) throw new Error('Limite de requêtes dépassée (429) après tentative de retry');
+                    return retryRes.json();
+                }
+                if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+                return res.json();
+            };
+
+            const loadPortfolio = async () => {
+                setError('');
+                if (!isValidAddress(address)) {
+                    setError('Veuillez entrer une adresse valide (0x...)');
+                    return;
+                }
+                setLoading(true);
+                try {
+                    // 1. Fetch token balances
+                    const tokRes = await fetchBV(`/account/tokens?address=${address}`);
+                    const tokensRaw = tokRes.result?.data || [];
+                    if (tokensRaw.length === 0) throw new Error('Aucun token trouvé');
+                    const tokens = tokensRaw.map(t => {
+                        const balance = parseFloat(t.balance) || 0;
+                        const price = parseFloat(t.price) || 0;
+                        return { symbol: t.symbol, balance, price, value: balance * price };
+                    });
+
+                    // 2. Fetch transactions for DeFi positions
+                    const txRes = await fetchBV(`/account/transactions?address=${address}&limit=100&ascendingOrder=false`);
+                    const txsRaw = txRes.result?.data || [];
+                    const DEFI_CONTRACTS = {
+                        '0xabc123abc123abc123abc123abc123abc123abc1': 'Monad DEX',
+                        '0xdef456def456def456def456def456def456def4': 'Monad Lending',
+                        '0x789ghi789ghi789ghi789ghi789ghi789ghi789g': 'Monad Staking'
+                    };
+                    const positionsMap = {};
+                    txsRaw.forEach(tx => {
+                        const to = tx.to?.toLowerCase();
+                        if (DEFI_CONTRACTS[to]) {
+                            if (!positionsMap[to]) positionsMap[to] = { protocol: DEFI_CONTRACTS[to], count: 0 };
+                            positionsMap[to].count += 1;
+                        }
+                    });
+                    const defiPositions = Object.values(positionsMap);
+
+                    // 3. Fetch all NFTs (paginated)
+                    let pageIndex = 1;
+                    const allNfts = [];
+                    while (true) {
+                        const nftRes = await fetchBV(
+                            `/account/nfts?address=${address}&pageIndex=${pageIndex}&verified=false&unknown=false`
+                        );
+                        const batch = nftRes.result?.data || [];
+                        if (batch.length === 0) break;
+                        allNfts.push(...batch);
+                        const next = nftRes.result.nextPageIndex;
+                        if (!next || next <= pageIndex) break;
+                        pageIndex = next;
+                    }
+                    const nfts = allNfts;
+
+                    setPortfolio({ tokens, defiPositions, nfts });
+                } catch (e) {
+                    setError(e.message);
+                    setPortfolio(null);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const totalValue = portfolio?.tokens?.reduce((sum, t) => sum + t.value, 0) || 0;
+
+            const pieData = portfolio?.tokens?.slice(0, 6).map((token, idx) => ({
+                name: token.symbol,
+                value: token.value,
+                color: COLORS[idx % COLORS.length]
+            })) || [];
+
+            return React.createElement("div", { className: "min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" },
+                // Animated Background Elements
+                React.createElement("div", { className: "fixed inset-0 overflow-hidden pointer-events-none" },
+                    React.createElement("div", { className: "absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse" }),
+                    React.createElement("div", { className: "absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000" }),
+                    React.createElement("div", { className: "absolute top-1/2 left-1/2 w-60 h-60 bg-indigo-500/10 rounded-full blur-3xl animate-pulse delay-500" })
+                ),
+
+                // Header
+                React.createElement("header", { className: "relative z-10 bg-black/20 backdrop-blur-xl border-b border-white/10" },
+                    React.createElement("div", { className: "container mx-auto px-6 py-4" },
+                        React.createElement("div", { className: "flex items-center justify-between" },
+                            React.createElement("div", { className: "flex items-center space-x-4" },
+                                React.createElement("div", { className: "p-2 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl" },
+                                    React.createElement(Wallet, { className: "w-8 h-8 text-white" })
+                                ),
+                                React.createElement("div", null,
+                                    React.createElement("h1", { className: "text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent" },
+                                        "Monad Portfolio Tracker"
+                                    ),
+                                    React.createElement("p", { className: "text-gray-400 text-sm" }, "Testnet Explorer & Analytics")
+                                )
+                            ),
+                            React.createElement("div", { className: "flex items-center space-x-2 text-green-400" },
+                                React.createElement("div", { className: "w-2 h-2 bg-green-400 rounded-full animate-pulse" }),
+                                React.createElement("span", { className: "text-sm" }, "Testnet Live")
+                            )
+                        )
+                    )
+                ),
+
+                // Main Content
+                React.createElement("main", { className: "relative z-10 container mx-auto px-6 py-8" },
+                    !portfolio ? 
+                        // Landing Page
+                        React.createElement("div", { className: "max-w-4xl mx-auto" },
+                            // Hero Section
+                            React.createElement("div", { className: "text-center mb-12" },
+                                React.createElement("h2", { className: "text-5xl font-bold text-white mb-6 leading-tight" },
+                                    "Track Your ",
+                                    React.createElement("span", { className: "bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent" }, "Monad Wallet")
+                                ),
+                                React.createElement("p", { className: "text-xl text-gray-300 mb-8 max-w-2xl mx-auto" },
+                                    "Comprehensive portfolio tracking for Monad testnet. Monitor tokens, NFTs, and DeFi positions all in one place."
+                                ),
+                                
+                                // Search Section
+                                React.createElement("div", { className: "bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10" },
+                                    React.createElement("div", { className: "flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto" },
+                                        React.createElement("div", { className: "flex-1 relative" },
+                                            React.createElement("input", {
+                                                className: "w-full p-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all",
+                                                placeholder: "Enter wallet address (0x...)",
+                                                value: address,
+                                                onChange: e => setAddress(e.target.value)
+                                            }),
+                                            React.createElement(Search, { className: "absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" })
+                                        ),
+                                        React.createElement("button", {
+                                            onClick: loadPortfolio,
+                                            disabled: loading,
+                                            className: "px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 rounded-xl font-semibold text-white transition-all transform hover:scale-105 disabled:hover:scale-100 flex items-center justify-center space-x-2 min-w-[140px]"
+                                        },
+                                            loading ? 
+                                                React.createElement(React.Fragment, null,
+                                                    React.createElement(RefreshCw, { className: "animate-spin w-5 h-5" }),
+                                                    React.createElement("span", null, "Loading...")
+                                                ) :
+                                                React.createElement(React.Fragment, null,
+                                                    React.createElement(Search, { className: "w-5 h-5" }),
+                                                    React.createElement("span", null, "Analyze")
+                                                )
+                                        )
+                                    ),
+                                    error && React.createElement("div", { className: "mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 flex items-center space-x-2" },
+                                        React.createElement(AlertCircle, { className: "w-5 h-5 flex-shrink-0" }),
+                                        React.createElement("span", null, error)
+                                    )
+                                )
+                            ),
+
+                            // Features Grid
+                            React.createElement("div", { className: "grid md:grid-cols-3 gap-8 mb-12" },
+                                React.createElement("div", { className: "bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all" },
+                                    React.createElement("div", { className: "p-3 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl w-fit mb-4" },
+                                        React.createElement(Coins, { className: "w-6 h-6 text-white" })
+                                    ),
+                                    React.createElement("h3", { className: "text-xl font-semibold text-white mb-2" }, "Token Portfolio"),
+                                    React.createElement("p", { className: "text-gray-400" }, "Track all your token balances with real-time pricing and portfolio distribution.")
+                                ),
+                                
+                                React.createElement("div", { className: "bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all" },
+                                    React.createElement("div", { className: "p-3 bg-gradient-to-br from-green-500 to-blue-500 rounded-xl w-fit mb-4" },
+                                        React.createElement(Image, { className: "w-6 h-6 text-white" })
+                                    ),
+                                    React.createElement("h3", { className: "text-xl font-semibold text-white mb-2" }, "NFT Collection"),
+                                    React.createElement("p", { className: "text-gray-400" }, "Browse your NFT collection with rich metadata and visual previews.")
+                                ),
+                                
+                                React.createElement("div", { className: "bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all" },
+                                    React.createElement("div", { className: "p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl w-fit mb-4" },
+                                        React.createElement(Activity, { className: "w-6 h-6 text-white" })
+                                    ),
+                                    React.createElement("h3", { className: "text-xl font-semibold text-white mb-2" }, "DeFi Tracking"),
+                                    React.createElement("p", { className: "text-gray-400" }, "Monitor your DeFi positions and protocol interactions.")
+                                )
+                            ),
+
+                            // Stats
+                            React.createElement("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-4" },
+                                React.createElement("div", { className: "bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10 text-center" },
+                                    React.createElement("div", { className: "text-2xl font-bold text-purple-400" }, "24/7"),
+                                    React.createElement("div", { className: "text-sm text-gray-400" }, "Real-time Updates")
+                                ),
+                                React.createElement("div", { className: "bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10 text-center" },
+                                    React.createElement("div", { className: "text-2xl font-bold text-blue-400" }, "100%"),
+                                    React.createElement("div", { className: "text-sm text-gray-400" }, "Secure & Private")
+                                ),
+                                React.createElement("div", { className: "bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10 text-center" },
+                                    React.createElement("div", { className: "text-2xl font-bold text-green-400" }, "Free"),
+                                    React.createElement("div", { className: "text-sm text-gray-400" }, "No Hidden Fees")
+                                ),
+                                React.createElement("div", { className: "bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10 text-center" },
+                                    React.createElement("div", { className: "text-2xl font-bold text-orange-400" }, "Fast"),
+                                    React.createElement("div", { className: "text-sm text-gray-400" }, "Instant Analysis")
+                                )
+                            )
+                        ) :
+                        // Portfolio Dashboard - Version simplifiée pour l'HTML
+                        React.createElement("div", { className: "space-y-8" },
+                            React.createElement("div", { className: "bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10" },
+                                React.createElement("h2", { className: "text-2xl font-bold text-white mb-4" }, "Portfolio Loaded Successfully!"),
+                                React.createElement("p", { className: "text-gray-300" }, `Found ${portfolio.tokens.length} tokens and ${portfolio.nfts.length} NFTs`),
+                                React.createElement("button", {
+                                    onClick: () => setPortfolio(null),
+                                    className: "mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white transition-all"
+                                }, "New Search")
+                            )
+                        )
+                )
+            );
+        };
+
+        // Render the app
+        ReactDOM.render(React.createElement(MonadPortfolioTracker), document.getElementById('root'));
+    </script>
+</body>
+</html>
