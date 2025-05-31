@@ -64,9 +64,10 @@ const LoadingAnimation = () => (
 
 // Token Card Component
 const TokenCard = ({ token, index, tokenPrices }) => {
-  // Get price in MON from Kuru data
-  const priceInMon = tokenPrices[token.symbol] || 0;
-  const valueInMon = token.balance * priceInMon;
+  // Only show price conversion if we have REAL price data from Kuru
+  const priceInMon = tokenPrices[token.symbol];
+  const hasRealPrice = priceInMon && priceInMon > 0 && tokenPrices.hasRealData;
+  const valueInMon = hasRealPrice ? token.balance * priceInMon : null;
   
   return (
     <div className="bg-gradient-to-r from-gray-800/60 to-gray-700/60 backdrop-blur-sm rounded-xl p-5 border border-gray-600/30 hover:border-blue-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 animate-fade-in">
@@ -77,39 +78,39 @@ const TokenCard = ({ token, index, tokenPrices }) => {
             <p className="font-bold text-xl text-blue-300">{token.symbol}</p>
           </div>
           <div className="flex items-center space-x-1">
-            {priceInMon > 0 && (
+            {hasRealPrice && (
               <TrendingUp className="w-4 h-4 text-green-400" />
             )}
           </div>
         </div>
         
         <div className="space-y-2">
-          <p className="text-gray-300 text-sm font-medium">
-            {formatTokenBalance(token.balance)} tokens
+          <p className="text-gray-300 text-lg font-medium">
+            {formatTokenBalance(token.balance)}
           </p>
           
           {token.symbol === 'MON' || token.symbol === '$MON' ? (
             <div className="space-y-1">
               <p className="text-xs text-gray-400">
-                Native token
+                Native Monad token
               </p>
               <p className="font-bold text-lg text-green-400">
                 {formatTokenBalance(token.balance)} $MON
               </p>
             </div>
-          ) : priceInMon > 0 ? (
+          ) : hasRealPrice ? (
             <div className="space-y-1">
               <p className="text-xs text-gray-400">
                 1 {token.symbol} = {formatTokenBalance(priceInMon)} $MON
               </p>
               <p className="font-bold text-lg text-green-400">
-                {formatTokenBalance(valueInMon)} $MON
+                ≈ {formatTokenBalance(valueInMon)} $MON
               </p>
             </div>
           ) : (
             <div className="space-y-1">
-              <p className="text-xs text-yellow-400">
-                Price data unavailable
+              <p className="text-xs text-gray-400">
+                {token.symbol} tokens
               </p>
               <a 
                 href={`https://testnet.kuru.io/trade/${token.symbol}-MON`}
@@ -204,38 +205,59 @@ const NFTCard = ({ nft, index, isVisible }) => {
   );
 };
 
-// Format token balance with 3 decimals and comma separators
+// Format token balance with appropriate decimals
 const formatTokenBalance = (balance) => {
   const num = parseFloat(balance);
-  if (!isFinite(num)) return '0.000';
+  if (!isFinite(num)) return '0';
   
-  // Round to 3 decimal places
-  const rounded = Math.round(num * 1000) / 1000;
+  // For very small numbers, show more decimals
+  if (num < 0.001 && num > 0) {
+    return num.toExponential(2);
+  }
   
-  // Format with comma separators
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 3,
-    maximumFractionDigits: 3
-  }).format(rounded);
+  // For regular numbers, show appropriate decimals
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(2) + 'M';
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(2) + 'K';
+  } else if (num >= 1) {
+    return num.toFixed(3);
+  } else {
+    return num.toFixed(6);
+  }
 };
 
-// Portfolio Summary Component
+// Portfolio Summary Component - UPDATED to only show real values
 const PortfolioSummary = ({ portfolio, tokenPrices }) => {
-  const totalValueInMon = portfolio.tokens.reduce((sum, token) => {
-    if (token.symbol === 'MON' || token.symbol === '$MON') {
-      return sum + token.balance;
-    }
-    const priceInMon = tokenPrices[token.symbol] || 0;
-    return sum + (token.balance * priceInMon);
-  }, 0);
+  // Only calculate total if we have real MON tokens
+  const monTokens = portfolio.tokens.filter(token => 
+    token.symbol === 'MON' || token.symbol === '$MON'
+  );
+  
+  const totalMonValue = monTokens.reduce((sum, token) => sum + token.balance, 0);
+  
+  // Count tokens with real prices
+  const tokensWithPrices = portfolio.tokens.filter(token => 
+    (token.symbol === 'MON' || token.symbol === '$MON') || 
+    (tokenPrices[token.symbol] && tokenPrices.hasRealData)
+  ).length;
 
   return (
     <div className="bg-gradient-to-r from-purple-800/30 to-blue-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30 mb-6">
       <h3 className="text-lg font-semibold text-gray-200 mb-4">Portfolio Summary</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="text-center">
-          <p className="text-3xl font-bold text-green-400">{formatTokenBalance(totalValueInMon)}</p>
-          <p className="text-sm text-gray-400">Total Value in $MON</p>
+          {totalMonValue > 0 ? (
+            <>
+              <p className="text-3xl font-bold text-green-400">{formatTokenBalance(totalMonValue)}</p>
+              <p className="text-sm text-gray-400">$MON Holdings</p>
+            </>
+          ) : (
+            <>
+              <p className="text-3xl font-bold text-gray-500">--</p>
+              <p className="text-sm text-gray-400">No $MON detected</p>
+            </>
+          )}
         </div>
         <div className="text-center">
           <p className="text-3xl font-bold text-blue-400">{portfolio.tokens.length}</p>
@@ -246,6 +268,15 @@ const PortfolioSummary = ({ portfolio, tokenPrices }) => {
           <p className="text-sm text-gray-400">NFTs Owned</p>
         </div>
       </div>
+      
+      {!tokenPrices.hasRealData && portfolio.tokens.length > 0 && (
+        <div className="mt-4 p-3 bg-yellow-900/30 border border-yellow-500/30 rounded-lg">
+          <p className="text-yellow-300 text-sm flex items-center">
+            <AlertCircle className="w-4 h-4 mr-2" />
+            Price data unavailable - showing token balances only
+          </p>
+        </div>
+      )}
     </div>
   );
 };
@@ -264,12 +295,14 @@ export default function MonadPortfolioTracker() {
 
   const isValidAddress = addr => /^0x[a-fA-F0-9]{40}$/.test(addr);
 
-  // Fetch token prices from Kuru DEX - NEW IMPLEMENTATION
+  // Fetch token prices from Kuru DEX - IMPROVED VERSION (only real data)
   const fetchTokenPricesFromKuru = async () => {
-    const prices = {};
+    const prices = { hasRealData: false };
     
     try {
-      // Method 1: Try to fetch via GraphQL API (if available)
+      console.log('Fetching real price data from Kuru DEX...');
+      
+      // Method 1: Try to fetch via GraphQL API
       const graphqlEndpoint = `${KURU_API}/graphql`;
       const query = `
         query {
@@ -300,9 +333,9 @@ export default function MonadPortfolioTracker() {
         
         if (graphqlRes.ok) {
           const data = await graphqlRes.json();
-          console.log('GraphQL market data:', data);
+          console.log('GraphQL market data received:', data);
           
-          if (data.data && data.data.markets) {
+          if (data.data && data.data.markets && data.data.markets.length > 0) {
             data.data.markets.forEach(market => {
               const baseSymbol = market.baseAsset?.symbol;
               const quoteSymbol = market.quoteAsset?.symbol;
@@ -311,8 +344,10 @@ export default function MonadPortfolioTracker() {
               if (baseSymbol && quoteSymbol && price > 0) {
                 if (quoteSymbol === 'MON' || quoteSymbol === '$MON') {
                   prices[baseSymbol] = price;
+                  prices.hasRealData = true;
                 } else if (baseSymbol === 'MON' || baseSymbol === '$MON') {
                   prices[quoteSymbol] = 1 / price;
+                  prices.hasRealData = true;
                 }
               }
             });
@@ -322,15 +357,13 @@ export default function MonadPortfolioTracker() {
         console.log('GraphQL not available, trying REST API');
       }
       
-      // Method 2: Try REST API endpoints
-      if (Object.keys(prices).length === 0) {
-        // Fetch orderbook data for each market
+      // Method 2: Try REST API endpoints only if GraphQL failed
+      if (!prices.hasRealData) {
         for (const [marketName, marketAddress] of Object.entries(MARKET_ADDRESSES)) {
           try {
             const orderbookRes = await fetch(`${KURU_API}/orderbook/${marketAddress}`);
             if (orderbookRes.ok) {
               const orderbook = await orderbookRes.json();
-              console.log(`Orderbook for ${marketName}:`, orderbook);
               
               // Calculate mid price from orderbook
               const bestBid = orderbook.bids && orderbook.bids.length > 0 ? parseFloat(orderbook.bids[0].price) : 0;
@@ -339,83 +372,61 @@ export default function MonadPortfolioTracker() {
               
               if (midPrice > 0) {
                 if (marketName === 'MON-USDC') {
-                  // MON-USDC: price is MON per USDC
                   prices['USDC'] = 1 / midPrice;
                   prices['kUSDC'] = 1 / midPrice;
+                  prices.hasRealData = true;
                 } else if (marketName.endsWith('-MON')) {
-                  // TOKEN-MON: price is TOKEN per MON
                   const tokenSymbol = marketName.split('-')[0];
                   prices[tokenSymbol] = midPrice;
+                  prices.hasRealData = true;
                 }
+                console.log(`Real price found for ${marketName}: ${midPrice}`);
               }
             }
           } catch (err) {
             console.error(`Failed to fetch orderbook for ${marketName}:`, err);
           }
         }
-        
-        // Method 3: Try trades endpoint as last resort
-        if (Object.keys(prices).length === 0) {
-          for (const [marketName, marketAddress] of Object.entries(MARKET_ADDRESSES)) {
-            try {
-              const tradesRes = await fetch(`${KURU_API}/trades/${marketAddress}?limit=1`);
-              if (tradesRes.ok) {
-                const trades = await tradesRes.json();
-                if (trades && trades.length > 0) {
-                  const lastPrice = parseFloat(trades[0].price);
-                  
-                  if (lastPrice > 0) {
-                    if (marketName === 'MON-USDC') {
-                      prices['USDC'] = 1 / lastPrice;
-                      prices['kUSDC'] = 1 / lastPrice;
-                    } else if (marketName.endsWith('-MON')) {
-                      const tokenSymbol = marketName.split('-')[0];
-                      prices[tokenSymbol] = lastPrice;
-                    }
+      }
+      
+      // Method 3: Try trades endpoint as last resort
+      if (!prices.hasRealData) {
+        for (const [marketName, marketAddress] of Object.entries(MARKET_ADDRESSES)) {
+          try {
+            const tradesRes = await fetch(`${KURU_API}/trades/${marketAddress}?limit=1`);
+            if (tradesRes.ok) {
+              const trades = await tradesRes.json();
+              if (trades && trades.length > 0) {
+                const lastPrice = parseFloat(trades[0].price);
+                
+                if (lastPrice > 0) {
+                  if (marketName === 'MON-USDC') {
+                    prices['USDC'] = 1 / lastPrice;
+                    prices['kUSDC'] = 1 / lastPrice;
+                    prices.hasRealData = true;
+                  } else if (marketName.endsWith('-MON')) {
+                    const tokenSymbol = marketName.split('-')[0];
+                    prices[tokenSymbol] = lastPrice;
+                    prices.hasRealData = true;
                   }
+                  console.log(`Real price from trades for ${marketName}: ${lastPrice}`);
                 }
               }
-            } catch (err) {
-              console.error(`Failed to fetch trades for ${marketName}:`, err);
             }
+          } catch (err) {
+            console.error(`Failed to fetch trades for ${marketName}:`, err);
           }
         }
       }
       
-      // Set MON price to 1
-      prices['MON'] = 1;
-      prices['$MON'] = 1;
-      
-      // Estimate USDT based on USDC if not available
-      if (prices['USDC'] && !prices['USDT']) {
-        prices['USDT'] = prices['USDC'];
-      }
-      
-      console.log('Final token prices:', prices);
-      
-      // If we still don't have prices, set some default values for testing
-      if (Object.keys(prices).length <= 2) {
-        console.log('Using fallback prices for demonstration');
-        prices['USDC'] = 0.1; // 1 USDC = 0.1 MON (1 MON = 10 USDC)
-        prices['kUSDC'] = 0.1;
-        prices['USDT'] = 0.1;
-        prices['DAK'] = 50; // 1 DAK = 50 MON
-        prices['CHOG'] = 100; // 1 CHOG = 100 MON
-        prices['YAKI'] = 25; // 1 YAKI = 25 MON
+      if (prices.hasRealData) {
+        console.log('✅ Real price data fetched successfully:', prices);
+      } else {
+        console.log('❌ No real price data available from Kuru DEX');
       }
       
     } catch (err) {
       console.error('Error fetching Kuru prices:', err);
-      
-      // Set some default values for demonstration
-      prices['MON'] = 1;
-      prices['$MON'] = 1;
-      prices['USDC'] = 0.1;
-      prices['kUSDC'] = 0.1;
-      prices['USDT'] = 0.1;
-      prices['DAK'] = 50;
-      prices['CHOG'] = 100;
-      prices['YAKI'] = 25;
     }
 
     return prices;
@@ -490,7 +501,7 @@ export default function MonadPortfolioTracker() {
     setCurrentNftPage(1);
     
     try {
-      // First, fetch token prices from Kuru
+      // First, try to fetch real token prices from Kuru
       const prices = await fetchTokenPricesFromKuru();
       setTokenPrices(prices);
 
@@ -554,7 +565,7 @@ export default function MonadPortfolioTracker() {
       }
 
       console.log('NFTs found:', allNfts);
-      console.log('Token prices from Kuru:', prices);
+      console.log('Price data status:', prices.hasRealData ? 'Real prices loaded' : 'No real prices available');
       
       setPortfolio({ tokens, defiPositions, nfts: allNfts });
       
@@ -811,7 +822,7 @@ export default function MonadPortfolioTracker() {
             </section>
           )}
 
-          {/* Charts Section */}
+          {/* Charts Section - Only show for tokens with actual balances */}
           {portfolio.tokens.length > 0 && (
             <section className="max-w-7xl mx-auto">
               <h2 className="text-2xl font-bold mb-6 text-center">
@@ -819,24 +830,22 @@ export default function MonadPortfolioTracker() {
               </h2>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Token Distribution Chart */}
+                {/* Token Distribution Chart - Show token balances */}
                 <div className="bg-gray-800/60 backdrop-blur-sm rounded-xl p-6 border border-gray-600/30">
-                  <h3 className="text-lg font-semibold text-gray-200 mb-4">Token Distribution</h3>
+                  <h3 className="text-lg font-semibold text-gray-200 mb-4">Token Distribution by Balance</h3>
                   <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsPieChart>
                         <Pie
                           data={portfolio.tokens.map((token, index) => ({
                             name: token.symbol,
-                            value: token.symbol === 'MON' || token.symbol === '$MON' 
-                              ? token.balance 
-                              : token.balance * (tokenPrices[token.symbol] || 0),
+                            value: token.balance,
                             fill: COLORS[index % COLORS.length]
                           }))}
                           cx="50%"
                           cy="50%"
                           labelLine={false}
-                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                          label={({ name, percent }) => percent > 5 ? `${name} ${(percent * 100).toFixed(0)}%` : ''}
                           outerRadius={80}
                           fill="#8884d8"
                           dataKey="value"
@@ -845,23 +854,24 @@ export default function MonadPortfolioTracker() {
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
-                        <Tooltip formatter={(value) => [`${formatTokenBalance(value)} $MON`, 'Value']} />
+                        <Tooltip formatter={(value, name) => [`${formatTokenBalance(value)}`, `${name} tokens`]} />
                       </RechartsPieChart>
                     </ResponsiveContainer>
                   </div>
+                  <p className="text-xs text-gray-400 mt-2">
+                    * Shows raw token balances, not USD values
+                  </p>
                 </div>
 
-                {/* Token Values Bar Chart */}
+                {/* Token Balances Bar Chart */}
                 <div className="bg-gray-800/60 backdrop-blur-sm rounded-xl p-6 border border-gray-600/30">
-                  <h3 className="text-lg font-semibold text-gray-200 mb-4">Token Values in $MON</h3>
+                  <h3 className="text-lg font-semibold text-gray-200 mb-4">Token Balances</h3>
                   <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart
                         data={portfolio.tokens.map(token => ({
                           symbol: token.symbol,
-                          value: token.symbol === 'MON' || token.symbol === '$MON' 
-                            ? token.balance 
-                            : token.balance * (tokenPrices[token.symbol] || 0)
+                          balance: token.balance
                         }))}
                         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                       >
@@ -877,7 +887,7 @@ export default function MonadPortfolioTracker() {
                           tickFormatter={(value) => formatTokenBalance(value)}
                         />
                         <Tooltip 
-                          formatter={(value) => [`${formatTokenBalance(value)} $MON`, 'Value']}
+                          formatter={(value, name) => [`${formatTokenBalance(value)}`, 'Balance']}
                           labelStyle={{ color: '#374151' }}
                           contentStyle={{ 
                             backgroundColor: '#1F2937', 
@@ -885,10 +895,13 @@ export default function MonadPortfolioTracker() {
                             borderRadius: '8px'
                           }}
                         />
-                        <Bar dataKey="value" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="balance" fill="#3B82F6" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
+                  <p className="text-xs text-gray-400 mt-2">
+                    * Raw token amounts - prices depend on market data availability
+                  </p>
                 </div>
               </div>
             </section>
