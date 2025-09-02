@@ -1,0 +1,745 @@
+/* src/components/header.css */
+/* NadFolio Portfolio Tracker - Header amélioré avec violet sombre */
+
+/* ============================================
+   HEADER MAIN CONTAINER - UNIFIED WITH PORTFOLIO
+   ============================================ */
+.header {
+  width: 100%;
+  background: linear-gradient(135deg, #1e1b4b, #312e81); /* Violet sombre au lieu de noir */
+  border-bottom: 1px solid rgba(139, 92, 246, 0.3); /* Bordure violette */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  margin: 0;
+  padding: 0;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15); /* Ombre violette */
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 95%;
+  margin: 0 auto;
+  padding: 16px 40px;
+  gap: 32px;
+  min-height: 70px;
+}
+
+/* ============================================
+   HEADER SECTIONS LAYOUT
+   ============================================ */
+.header-left {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  min-width: 280px;
+}
+
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.header-right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 280px;
+  justify-content: flex-end;
+}
+
+/* ============================================
+   BRAND CONTAINER (LEFT SECTION)
+   ============================================ */
+.brand-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #8b5cf6, #a855f7); /* Violet plus vif */
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4); /* Ombre violette plus prononcée */
+  transition: all 0.3s ease;
+}
+
+.logo:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 28px rgba(139, 92, 246, 0.5);
+}
+
+.logo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
+  border-radius: 10px;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  letter-spacing: -0.5px;
+  z-index: 1;
+}
+
+.logo-pulse {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8b5cf6, #a855f7);
+  opacity: 0.6;
+  animation: logoPulse 2s infinite;
+}
+
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.05); opacity: 0.3; }
+}
+
+.brand-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff; /* Blanc pour contraste sur violet sombre */
+  margin: 0;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #ffffff, #e2e8f0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.version {
+  font-size: 10px;
+  font-weight: 600;
+  background: #8b5cf6;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.brand-subtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8); /* Blanc transparent pour lisibilité */
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* ============================================
+   PRICE TICKER (CENTER SECTION) - Inchangé
+   ============================================ */
+.price-ticker-container {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  background: rgba(30, 27, 75, 0.6); /* Fond violet sombre transparent */
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  padding: 10px 0;
+  max-width: 500px;
+  min-width: 400px;
+  backdrop-filter: blur(10px);
+}
+
+.price-ticker {
+  width: 100%;
+  overflow: hidden;
+}
+
+.ticker-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  animation: scroll-ticker 50s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes scroll-ticker {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+  min-width: fit-content;
+  backdrop-filter: blur(5px);
+}
+
+.ticker-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: translateY(-1px);
+}
+
+.token-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.token-symbol {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 32px;
+  flex-shrink: 0;
+}
+
+.token-price {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  min-width: 60px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.token-change {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  min-width: 50px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.token-change.positive {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.2);
+}
+
+.token-change.negative {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.ticker-separator {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 10px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   RIGHT SECTION CONTROLS
+   ============================================ */
+
+/* Wallet Indicator */
+.wallet-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+  min-width: fit-content;
+  backdrop-filter: blur(10px);
+}
+
+.wallet-indicator:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.wallet-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.wallet-dot.connected {
+  background: #10b981;
+  animation: pulse 2s infinite;
+}
+
+.wallet-dot::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: #10b981;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: ripple 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 0.3; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.wallet-address {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+}
+
+/* Time Display */
+.time-display {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+  min-width: fit-content;
+  backdrop-filter: blur(10px);
+}
+
+.time-display:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.current-time {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+}
+
+.time-separator {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: bold;
+}
+
+.current-date {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+/* Theme Toggle - Amélioré avec texte */
+.theme-toggle {
+  width: auto;
+  min-width: 100px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 12px;
+  backdrop-filter: blur(10px);
+}
+
+.theme-toggle:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  transform: translateY(-1px) scale(1.02);
+}
+
+.theme-toggle:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.theme-toggle svg {
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(15deg);
+}
+
+.theme-text {
+  white-space: nowrap;
+}
+
+/* ============================================
+   WALLET INPUT SECTION - Barre de recherche agrandie
+   ============================================ */
+.wallet-input-section {
+  padding: 28px 40px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-primary);
+  position: sticky;
+  top: 64px;
+  z-index: 100;
+}
+
+.input-container {
+  max-width: 95%;
+  margin: 0 auto;
+}
+
+.input-group {
+  display: flex;
+  gap: 16px;
+  background: var(--bg-tertiary);
+  padding: 8px;
+  border-radius: 16px;
+  border: 1px solid var(--border-primary);
+  transition: border-color 0.2s ease;
+}
+
+.input-group:focus-within {
+  border-color: var(--border-secondary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.wallet-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 18px 24px;
+  color: var(--text-primary);
+  font-size: 16px;
+  outline: none;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+  min-width: 600px; /* Largeur minimum augmentée */
+  max-width: 800px; /* Largeur maximum augmentée */
+}
+
+.wallet-input:focus {
+  background: var(--bg-quaternary);
+}
+
+.wallet-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.analyze-button {
+  background: var(--accent-white);
+  color: var(--bg-primary);
+  border: none;
+  padding: 18px 32px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.analyze-button:hover {
+  background: var(--text-secondary);
+  transform: translateY(-1px);
+}
+
+.analyze-button:active {
+  transform: translateY(0);
+}
+
+.analyze-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN - ALIGNED WITH PORTFOLIO
+   ============================================ */
+@media (max-width: 1400px) {
+  .header-container {
+    max-width: 98%;
+    padding: 16px 32px;
+  }
+  
+  .wallet-input {
+    min-width: 500px;
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .header-container {
+    max-width: 100%;
+    padding: 16px 24px;
+    gap: 24px;
+  }
+  
+  .brand-title {
+    font-size: 18px;
+  }
+  
+  .logo {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .logo-text {
+    font-size: 16px;
+  }
+  
+  .header-left,
+  .header-right {
+    min-width: 180px;
+  }
+  
+  .price-ticker-container {
+    min-width: 350px;
+    padding: 8px 0;
+  }
+  
+  .wallet-input {
+    min-width: 400px;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header-container {
+    gap: 20px;
+    padding: 16px 20px;
+  }
+  
+  .header-right {
+    gap: 12px;
+  }
+  
+  .price-ticker-container {
+    min-width: 300px;
+  }
+  
+  .ticker-content {
+    animation: scroll-ticker 45s linear infinite;
+  }
+  
+  .time-display {
+    padding: 8px 10px;
+  }
+  
+  .wallet-indicator {
+    padding: 8px 10px;
+  }
+  
+  .wallet-input {
+    min-width: 350px;
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 12px 20px;
+    gap: 12px;
+    min-height: 60px;
+    flex-wrap: nowrap;
+  }
+  
+  .header-left {
+    min-width: 140px;
+  }
+  
+  .header-right {
+    gap: 8px;
+    min-width: 120px;
+  }
+  
+  .brand-subtitle {
+    font-size: 11px;
+  }
+  
+  .wallet-indicator,
+  .time-display,
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+  
+  .theme-toggle .theme-text {
+    display: none;
+  }
+  
+  .wallet-address {
+    display: none;
+  }
+  
+  .current-date {
+    display: none;
+  }
+  
+  .time-separator {
+    display: none;
+  }
+  
+  .price-ticker-container {
+    min-width: 200px;
+    padding: 6px 0;
+  }
+  
+  .ticker-item {
+    padding: 3px 6px;
+  }
+  
+  .token-symbol,
+  .token-price {
+    font-size: 10px;
+  }
+  
+  .token-change {
+    font-size: 9px;
+  }
+  
+  .ticker-separator {
+    margin: 0 6px;
+    font-size: 14px;
+  }
+  
+  .wallet-input {
+    min-width: 280px;
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 10px 16px;
+    gap: 8px;
+  }
+  
+  .header-left {
+    min-width: 120px;
+  }
+  
+  .header-right {
+    min-width: 100px;
+  }
+  
+  .brand-container {
+    gap: 8px;
+  }
+  
+  .brand-title {
+    font-size: 16px;
+  }
+  
+  .brand-subtitle {
+    display: none;
+  }
+  
+  .logo {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .logo-text {
+    font-size: 14px;
+  }
+  
+  .theme-toggle {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .price-ticker-container {
+    min-width: 150px;
+    padding: 4px 0;
+  }
+  
+  .ticker-content {
+    gap: 1rem;
+    animation: scroll-ticker 35s linear infinite;
+  }
+  
+  .ticker-item {
+    padding: 2px 4px;
+  }
+  
+  .token-icon {
+    font-size: 12px;
+  }
+  
+  .token-symbol {
+    min-width: 24px;
+    font-size: 9px;
+  }
+  
+  .token-price {
+    min-width: 40px;
+    font-size: 9px;
+  }
+  
+  .token-change {
+    min-width: 35px;
+    font-size: 8px;
+  }
+  
+  .wallet-input {
+    min-width: 200px;
+    max-width: 280px;
+  }
+}

@@ -1,0 +1,895 @@
+/* =============================================================================
+   ASSETCOMPOSITION.CSS - STYLES POUR LE COMPOSANT ASSET COMPOSITION
+   Description: Styles spécifiques pour la composition des assets (tokens et NFTs)
+   ============================================================================= */
+
+/* ============================================
+   ASSET COMPOSITION - ULTRA COMPACT DESIGN - UNIFIED
+   ============================================ */
+
+.asset-composition-mini {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.2s ease;
+  min-height: var(--component-height-mini);
+}
+
+.asset-composition-mini:hover {
+  border-color: var(--border-secondary);
+}
+
+/* Mini Header */
+.section-header-mini {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.section-title-mini {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Mini Controls */
+.controls-mini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: var(--bg-quaternary);
+  border-radius: 6px;
+  border: 1px solid var(--border-primary);
+}
+
+.sort-label-mini {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.sort-buttons-mini {
+  display: flex;
+  gap: 4px;
+}
+
+.sort-btn-mini {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sort-btn-mini:hover {
+  background: var(--bg-quaternary);
+  color: var(--text-primary);
+}
+
+.sort-btn-mini.active {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+  color: white;
+}
+
+/* Grid */
+.grid-mini {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.grid-mini.nft-grid {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+
+/* Mini Cards */
+.card-mini {
+  background: var(--bg-quaternary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 10px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 120px;
+}
+
+.card-mini::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent-purple);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.card-mini.nft-mini::before {
+  background: var(--info);
+}
+
+.card-mini:hover {
+  border-color: var(--border-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-mini:hover::before {
+  opacity: 1;
+}
+
+/* Card Top */
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+}
+
+.logo-mini {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-tertiary);
+  object-fit: cover;
+}
+
+.logo-mini.nft-image {
+  border-radius: 4px;
+}
+
+.verified-mini {
+  position: absolute;
+  top: -2px;
+  left: 20px;
+  width: 12px;
+  height: 12px;
+  background: var(--success);
+  color: white;
+  border-radius: 50%;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--bg-quaternary);
+}
+
+.percentage-mini {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--accent-purple);
+  background: rgba(99, 102, 241, 0.15);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.nft-badge-mini {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--info);
+  background: rgba(59, 130, 246, 0.1);
+  padding: 1px 4px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.nft-id-mini {
+  font-size: 9px;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+/* Card Info */
+.card-info {
+  flex: 1;
+}
+
+.symbol-mini {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name-mini {
+  font-size: 10px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* Card Stats */
+.card-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.balance-mini, .price-mini, .rarity-mini, .status-mini {
+  font-size: 9px;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  padding: 2px 4px;
+  border-radius: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  text-align: center;
+}
+
+.status-mini {
+  color: var(--success);
+}
+
+/* Card Value */
+.card-value {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-primary);
+}
+
+.value-mini {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.actions-mini {
+  display: flex;
+  gap: 3px;
+}
+
+.action-mini {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border-primary);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 10px;
+  background: var(--bg-tertiary);
+}
+
+.action-mini:hover {
+  border-color: var(--border-secondary);
+  transform: translateY(-1px);
+}
+
+.action-mini.swap {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+  color: white;
+}
+
+.action-mini.send, .action-mini.transfer {
+  background: var(--info-bg);
+  border-color: var(--info);
+  color: var(--info);
+}
+
+.action-mini.view {
+  background: var(--warning-bg);
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.action-mini.explorer {
+  background: var(--success-bg);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+/* Empty State */
+.empty-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  min-height: 120px;
+}
+
+.empty-icon-mini {
+  font-size: 32px;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+
+.empty-mini h3 {
+  font-size: 14px;
+  margin: 0 0 4px 0;
+  color: var(--text-primary);
+}
+
+.empty-mini p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Summary */
+.summary-mini {
+  display: flex;
+  justify-content: space-around;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-primary);
+}
+
+.summary-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--bg-quaternary);
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  flex: 1;
+  justify-content: center;
+}
+
+.summary-stat:hover {
+  border-color: var(--border-secondary);
+  transform: translateY(-1px);
+}
+
+.stat-icon-mini {
+  font-size: 12px;
+}
+
+.stat-text-mini {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ============================================
+   ASSET COMPOSITION (FULL VERSION)
+   ============================================ */
+.asset-composition {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 32px;
+  transition: border-color 0.2s ease;
+}
+
+.asset-composition:hover {
+  border-color: var(--border-secondary);
+}
+
+.asset-composition .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+}
+
+.asset-composition .section-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.asset-composition .section-title h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.asset-composition .section-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-purple);
+  background: rgba(91, 33, 182, 0.1);
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(91, 33, 182, 0.2);
+}
+
+.asset-tabs {
+  display: flex;
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  padding: 6px;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-primary);
+}
+
+.tab-button {
+  flex: 1;
+  padding: 16px 24px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.tab-button:hover {
+  color: var(--text-primary);
+  background: var(--bg-quaternary);
+}
+
+.tab-button.active {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-primary);
+}
+
+.asset-content {
+  min-height: 300px;
+}
+
+/* ============================================
+   TOKENS SECTION (FULL VERSION)
+   ============================================ */
+.tokens-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.token-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.token-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent-white);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.token-item:hover {
+  border-color: var(--border-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.token-item:hover::before {
+  opacity: 1;
+}
+
+.token-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.token-logo {
+  width: 48px;
+  height: 48px;
+  background: var(--bg-secondary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 16px;
+  border: 2px solid var(--border-primary);
+  overflow: hidden;
+  position: relative;
+}
+
+.token-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.token-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.token-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.token-full-name {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.token-balance {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 2px 0 0 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.token-value {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.token-usd-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.token-price {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   NFTS SECTION (FULL VERSION)
+   ============================================ */
+.nfts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nft-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nft-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--text-secondary);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.nft-item:hover {
+  border-color: var(--border-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.nft-item:hover::before {
+  opacity: 1;
+}
+
+.nft-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.nft-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-primary);
+  position: relative;
+}
+
+.nft-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nft-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.nft-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.nft-collection {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.nft-value {
+  text-align: right;
+}
+
+.nft-usd-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   EMPTY STATES FOR ASSETS (FULL VERSION)
+   ============================================ */
+.asset-content .empty-state {
+  min-height: 240px;
+  padding: 40px;
+}
+
+.asset-content .empty-content {
+  max-width: 400px;
+}
+
+.asset-content .empty-icon {
+  font-size: 56px;
+  margin-bottom: 20px;
+}
+
+.asset-content .empty-content h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.asset-content .empty-content p {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* ============================================
+   TABS SYSTEM RÉUTILISABLE
+   ============================================ */
+.tabs-mini {
+  display: flex;
+  background: var(--bg-quaternary);
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border-primary);
+}
+
+.tab-mini {
+  flex: 1;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tab-mini:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.tab-mini.active {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-primary);
+}
+
+.count-mini {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  padding: 1px 4px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.tab-mini.active .count-mini {
+  background: var(--accent-purple);
+  color: white;
+}
+
+.content-mini {
+  min-height: 120px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN POUR ASSETS
+   ============================================ */
+@media (max-width: 1400px) {
+  .grid-mini {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  .grid-mini {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+  
+  .grid-mini.nft-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-mini {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+  
+  .grid-mini.nft-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  }
+  
+  .summary-mini {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .controls-mini {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .token-item,
+  .nft-item {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .token-info,
+  .nft-info {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .token-value,
+  .nft-value {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-mini {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-mini.nft-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .card-mini {
+    min-height: 100px;
+    padding: 8px;
+  }
+}
+
+/* ============================================
+   FOCUS STATES POUR ASSETS
+   ============================================ */
+.tab-mini:focus,
+.card-mini:focus,
+.action-mini:focus,
+.tab-button:focus,
+.sort-btn-mini:focus {
+  outline: 2px solid var(--accent-white);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   ANIMATIONS SPÉCIFIQUES AUX ASSETS
+   ============================================ */
+.card-mini,
+.token-item,
+.nft-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-mini::after,
+.token-item::after,
+.nft-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.card-mini:hover::after,
+.token-item:hover::after,
+.nft-item:hover::after {
+  left: 100%;
+}

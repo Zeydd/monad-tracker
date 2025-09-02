@@ -1,0 +1,547 @@
+/* src/components/portfolio/DeFiPositions.css */
+/* Styles spécifiques pour le composant DeFi Positions */
+
+.defi-section-mini {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+.error-banner-mini {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #ef4444;
+}
+
+.error-banner-mini button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: opacity 0.2s;
+}
+
+.error-banner-mini button:hover {
+  opacity: 0.8;
+}
+
+.refresh-btn-mini {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  margin-left: 8px;
+}
+
+.refresh-btn-mini:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
+.refresh-btn-mini:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-spinner {
+  margin-left: 8px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Positions List */
+.positions-list-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.position-card-mini {
+  background: var(--section-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+}
+
+.position-card-mini:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-color);
+}
+
+.position-protocol-mini {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.protocol-icon-mini {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  background: var(--accent-gradient);
+}
+
+.protocol-info-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.protocol-name-mini {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.position-type-mini {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.position-value-mini {
+  text-align: right;
+}
+
+.value-amount-mini {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.position-apy-mini {
+  margin-top: 4px;
+}
+
+.apy-value {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.apy-value.high {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.apy-value.medium {
+  background: rgba(249, 115, 22, 0.2);
+  color: #f97316;
+}
+
+.apy-value.low {
+  background: rgba(107, 114, 128, 0.2);
+  color: var(--text-secondary);
+}
+
+.position-tokens-mini {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 120px;
+}
+
+.token-tag-mini {
+  background: var(--accent-color);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.token-more-mini {
+  background: var(--text-secondary);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.position-status-mini {
+  font-size: 1.2rem;
+}
+
+.position-status-mini.active {
+  filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.6));
+}
+
+.position-status-mini.inactive {
+  filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.6));
+}
+
+/* Opportunities Section */
+.opportunities-mini {
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.opportunities-mini h4 {
+  margin: 0 0 16px 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.opportunities-grid-mini {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.opportunity-card-mini {
+  background: var(--section-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.opportunity-card-mini:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-color);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+}
+
+.opportunity-icon-mini {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+}
+
+.opportunity-info-mini {
+  flex: 1;
+}
+
+.opportunity-name-mini {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.opportunity-apy-mini {
+  font-weight: 700;
+  color: var(--accent-color);
+  font-size: 0.85rem;
+  margin-bottom: 2px;
+}
+
+.opportunity-desc-mini {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+/* Activities Section */
+.activities-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.activity-card-mini {
+  background: var(--section-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.activity-card-mini:hover {
+  border-color: var(--accent-color);
+  transform: translateX(2px);
+}
+
+.activity-icon-mini {
+  font-size: 1.2rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+}
+
+.activity-info-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.activity-type-mini {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.activity-hash-mini {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+
+.activity-protocol-mini {
+  font-size: 0.7rem;
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+.activity-amount-mini {
+  text-align: right;
+}
+
+.amount-value-mini {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.amount-token-mini {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.activity-time-mini {
+  text-align: right;
+}
+
+.activity-date-mini {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.activity-time-detail-mini {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+/* Transactions Section */
+.transactions-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transaction-card-mini {
+  background: var(--section-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.transaction-card-mini:hover {
+  border-color: var(--accent-color);
+  transform: translateX(2px);
+}
+
+.transaction-icon-mini {
+  font-size: 1.2rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+}
+
+.transaction-info-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.transaction-type-mini {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.transaction-hash-mini {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+
+.transaction-details-mini {
+  text-align: right;
+}
+
+.transaction-value-mini {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.transaction-block-mini,
+.transaction-gas-mini {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.transaction-time-mini {
+  text-align: right;
+}
+
+.transaction-date-mini {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.transaction-time-detail-mini {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+/* Show More Button */
+.show-more-mini {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.show-more-btn-mini {
+  background: var(--section-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.show-more-btn-mini:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+/* Mobula Info Bar */
+.mobula-info-mini {
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.info-icon {
+  font-size: 0.8rem;
+}
+
+.info-text {
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .position-card-mini {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    text-align: left;
+  }
+  
+  .position-value-mini,
+  .activity-time-mini,
+  .transaction-time-mini {
+    text-align: left;
+  }
+  
+  .opportunities-grid-mini {
+    grid-template-columns: 1fr;
+  }
+  
+  .activity-card-mini,
+  .transaction-card-mini {
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
+  }
+  
+  .mobula-info-mini {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .defi-section-mini {
+    padding: 16px;
+  }
+  
+  .position-card-mini,
+  .opportunity-card-mini,
+  .activity-card-mini,
+  .transaction-card-mini {
+    padding: 12px;
+  }
+}

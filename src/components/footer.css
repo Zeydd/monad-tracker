@@ -1,0 +1,504 @@
+/* src/components/footer.css */
+/* Professional Footer Component for NadFolio */
+
+/* ============================================
+   FOOTER MAIN CONTAINER
+   ============================================ */
+.footer {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-primary);
+  margin-top: auto;
+  padding: 40px 0 20px;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ============================================
+   FOOTER MAIN SECTION
+   ============================================ */
+.footer-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr;
+  gap: 48px;
+  margin-bottom: 32px;
+}
+
+/* ============================================
+   FOOTER BRAND
+   ============================================ */
+.footer-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.footer-logo {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(91, 33, 182, 0.2);
+  flex-shrink: 0;
+}
+
+.footer-logo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
+  border-radius: 12px;
+}
+
+.footer-logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  letter-spacing: -0.5px;
+  z-index: 1;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--text-primary), var(--accent-purple));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.footer-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* ============================================
+   FOOTER SECTIONS
+   ============================================ */
+.footer-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+  letter-spacing: -0.3px;
+}
+
+/* ============================================
+   SOCIAL LINKS
+   ============================================ */
+.footer-social {
+  display: flex;
+  flex-direction: column;
+}
+
+.social-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  width: 44px;
+  height: 44px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.social-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--accent-purple);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 10px;
+}
+
+.social-link:hover {
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(91, 33, 182, 0.2);
+}
+
+.social-link:hover::before {
+  opacity: 0.1;
+}
+
+.social-link:active {
+  transform: translateY(0);
+}
+
+/* ============================================
+   DONATION SECTION
+   ============================================ */
+.footer-donation {
+  display: flex;
+  flex-direction: column;
+}
+
+.donation-message {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.donation-wallet {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wallet-display {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wallet-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+}
+
+.wallet-address-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.2s ease;
+}
+
+.wallet-address-container:hover {
+  border-color: var(--border-secondary);
+  background: var(--bg-quaternary);
+}
+
+.wallet-address {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+  flex: 1;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.copy-button {
+  width: 32px;
+  height: 32px;
+  background: var(--bg-quaternary);
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.copy-button:hover {
+  border-color: var(--accent-purple);
+  background: var(--accent-purple);
+  color: white;
+  transform: scale(1.05);
+}
+
+.copy-button.copied {
+  border-color: var(--success);
+  background: var(--success);
+  color: white;
+}
+
+.copy-feedback {
+  font-size: 12px;
+  color: var(--success);
+  font-weight: 600;
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   FOOTER DIVIDER
+   ============================================ */
+.footer-divider {
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--border-primary) 20%, 
+    var(--border-primary) 80%, 
+    transparent 100%
+  );
+  margin: 32px 0 24px;
+}
+
+/* ============================================
+   FOOTER BOTTOM
+   ============================================ */
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.footer-left {
+  flex: 1;
+}
+
+.footer-copyright {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 500;
+}
+
+.footer-right {
+  flex-shrink: 0;
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.footer-link {
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+
+.footer-link:hover {
+  color: var(--accent-purple);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 1400px) {
+  .footer-container {
+    max-width: 100%;
+    padding: 0 32px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .footer-container {
+    padding: 0 24px;
+  }
+  
+  .footer-main {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .footer-main {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  
+  .footer-donation {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 32px 0 16px;
+  }
+  
+  .footer-container {
+    padding: 0 20px;
+  }
+  
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    text-align: center;
+  }
+  
+  .footer-brand {
+    justify-content: center;
+  }
+  
+  .social-links {
+    justify-content: center;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .footer-links {
+    gap: 16px;
+  }
+  
+  .wallet-address {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-container {
+    padding: 0 16px;
+  }
+  
+  .footer-main {
+    gap: 24px;
+  }
+  
+  .footer-brand {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .footer-logo {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .footer-logo-text {
+    font-size: 18px;
+  }
+  
+  .footer-title {
+    font-size: 20px;
+  }
+  
+  .social-links {
+    gap: 8px;
+  }
+  
+  .social-link {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .wallet-address-container {
+    padding: 10px;
+  }
+  
+  .wallet-address {
+    font-size: 11px;
+  }
+  
+  .copy-button {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .footer-links {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.social-link:focus,
+.copy-button:focus {
+  outline: 2px solid var(--accent-purple);
+  outline-offset: 2px;
+}
+
+.footer-link:focus {
+  outline: 2px solid var(--accent-purple);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .social-link,
+  .copy-button,
+  .copy-feedback {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .social-link:hover,
+  .copy-button:hover {
+    transform: none !important;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+@media (prefers-contrast: high) {
+  .footer {
+    border-top: 2px solid var(--border-secondary);
+  }
+  
+  .footer-logo {
+    border: 2px solid var(--accent-white);
+  }
+  
+  .social-link,
+  .wallet-address-container,
+  .copy-button {
+    border: 2px solid var(--border-secondary);
+  }
+}

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7c3aed" />
+    <meta
+      name="description"
+      content="MonadFolio - Track your DeFi wallet and positions across the Monad ecosystem"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Tailwind CSS CDN - Version complète pour support moderne -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuration Tailwind pour couleurs Monad personnalisées -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              violet: {
+                50: '#f5f3ff',
+                100: '#ede9fe',
+                200: '#ddd6fe',
+                300: '#c4b5fd',
+                400: '#a78bfa',
+                500: '#8b5cf6',
+                600: '#7c3aed',
+                700: '#6d28d9',
+                800: '#5b21b6',
+                900: '#4c1d95',
+                950: '#2e1065'
+              },
+              purple: {
+                50: '#faf5ff',
+                100: '#f3e8ff',
+                200: '#e9d5ff',
+                300: '#d8b4fe',
+                400: '#c084fc',
+                500: '#a855f7',
+                600: '#9333ea',
+                700: '#7e22ce',
+                800: '#6b21a8',
+                900: '#581c87',
+                950: '#3b0764'
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+            },
+            animation: {
+              'gradient': 'gradient 6s ease infinite',
+              'float': 'float 3s ease-in-out infinite',
+              'pulse-soft': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+            },
+            keyframes: {
+              gradient: {
+                '0%, 100%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'left center'
+                },
+                '50%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'right center'
+                }
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-10px)' }
+              }
+            },
+            backdropBlur: {
+              xs: '2px'
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- Google Fonts pour une typography moderne -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- CSS personnalisé pour effets avancés -->
+    <style>
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: rgba(148, 163, 184, 0.1);
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #7c3aed, #a855f7);
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #6d28d9, #9333ea);
+      }
+      
+      /* Loading animation enhancement */
+      @keyframes shimmer {
+        0% { background-position: -200px 0; }
+        100% { background-position: calc(200px + 100%) 0; }
+      }
+      
+      .shimmer {
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        background-size: 200px 100%;
+        animation: shimmer 1.5s infinite;
+      }
+      
+      /* Glassmorphism enhancement */
+      .glass {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      
+      /* Gradient text animation */
+      .gradient-text {
+        background: linear-gradient(-45deg, #7c3aed, #a855f7, #c084fc, #8b5cf6);
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradient 3s ease infinite;
+      }
+      
+      /* Custom focus styles */
+      .focus-violet:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3);
+      }
+      
+      /* Hover glow effect */
+      .hover-glow:hover {
+        box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
+      }
+      
+      /* Card hover lift effect */
+      .card-lift {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .card-lift:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 25px 50px -12px rgba(124, 58, 237, 0.25);
+      }
+      
+      /* Button press effect */
+      .btn-press:active {
+        transform: scale(0.98);
+      }
+      
+      /* Fade in animation for content */
+      .fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+        opacity: 0;
+      }
+      
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      /* Stagger animation delays */
+      .fade-in-1 { animation-delay: 0.1s; }
+      .fade-in-2 { animation-delay: 0.2s; }
+      .fade-in-3 { animation-delay: 0.3s; }
+      .fade-in-4 { animation-delay: 0.4s; }
+    </style>
+    
+    <title>MonadFolio - DeFi Portfolio Tracker</title>
+  </head>
+  <body class="font-sans antialiased">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://api.blockvision.org" as="dns-prefetch">
+  </body>
+</html>
